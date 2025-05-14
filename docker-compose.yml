@@ -1,0 +1,17 @@
+services:
+  webserver:
+    image: nginx:1.27.5
+    ports:
+      - "8080:80"
+    volumes:
+      - "./:/var/www/html"
+      - "./docker/site.conf:/etc/nginx/conf.d/default.conf"
+
+  php:
+    build:
+      context: .
+    volumes:
+      - "./:/var/www/html"
+      - ./docker/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
