@@ -22,6 +22,8 @@ class IndexController extends Controller
         // divide period into days
         $start = $request->input('start');
         $end = $request->input('end');
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
 
         $start = new DateTime($start);
         $end = new DateTime($end);
@@ -52,7 +54,7 @@ class IndexController extends Controller
             'timezone' => $timezone,
             'start' => $start,
             'end' => $end,
-            'test' => json_encode($dailyData),
+            'test' => $latitude . " " . $longitude,
         ]);
 
         // Download file

@@ -23,6 +23,8 @@
                 </h1>
                 <form class="max-w-sm mx-auto" method="POST" action="/">
                     @csrf
+                    <input type="hidden" name="latitude" id="latitude">
+                    <input type="hidden" name="longitude" id="longitude">
                     <label for="start" class="block mb-2 text-sm font-medium  text-gray-500 dark:text-gray-400">Date Range</label>
                     <div class="mb-5 flex items-center">
                         <div class="relative">
@@ -85,17 +87,17 @@ const options = {
 function success(pos) {
   const crd = pos.coords;
 
-  console.log("Your current position is:");
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude: ${crd.longitude}`);
-  console.log(`More or less ${crd.accuracy} meters.`);
+    console.log("Your current position is:");
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
+    console.log(`More or less ${crd.accuracy} meters.`);
 
-  document.getElementById('latitude').value = crd.latitude;
+    document.getElementById('latitude').value = crd.latitude;
     document.getElementById('longitude').value = crd.longitude;
 }
 
 function error(err) {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
+    console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
 navigator.geolocation.getCurrentPosition(success, error, options);
