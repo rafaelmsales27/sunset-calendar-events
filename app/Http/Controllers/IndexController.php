@@ -32,10 +32,18 @@ class IndexController extends Controller
         // TODO including present day and final day
         // TODO ask if should include start and end date into events
 
-        foreach ($period as $day) {
-            //     - search for sunset
-            //     - create event in .ics for that day
+         foreach ($period as $dt) {
+            $currentDate = $dt->format('Y-m-d');
+            // Here you can prepare the data needed for your API call for $currentDate
+            // For example, you might want to store the date in an array:
+            $dailyData[] = $currentDate;
         }
+
+
+        // foreach ($period as $day) {
+        //     //     - search for sunset
+        //     //     - create event in .ics for that day
+        // }
 
         // TODO Manage api errors (toast?)
         // $response = $this->sunsetApiCall('38.907192', '-77.036873', 'UTC', '1990-05-22');
@@ -44,6 +52,7 @@ class IndexController extends Controller
             'timezone' => $timezone,
             'start' => $start,
             'end' => $end,
+            'test' => json_encode($dailyData),
         ]);
 
         // Download file
