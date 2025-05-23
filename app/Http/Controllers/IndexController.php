@@ -39,10 +39,15 @@ class IndexController extends Controller
         // TODO ask if should include start and end date into events
 
         $sunData = [];
-         foreach ($period as $dt) {
+        foreach ($period as $dt) {
             $currentDate = $dt->format('Y-m-d');
             if (!$latitude || !$longitude) {
-                return redirect()->route('index');
+                return view('index', [
+                    'timezone' => $timezone,
+                    'start' => $start,
+                    'end' => $end,
+                    'test' => json_encode($sunData),
+                ]);
             }
             $response = $this->sunsetApiCall($latitude, $longitude, $currentDate);
             $response = json_decode($response, true);
@@ -102,13 +107,14 @@ class IndexController extends Controller
         $fileName = 'sunset_events_' . $start->format('Ymd') . '_' . $end->format('Ymd') . '.ics';
 
         //! Do test event and then import into multiple calendars
-
+        $calendar = Calendar::create()
+            ->name('CALENDAR TEST');
 
         return response($calendar->get()) // Call ->get() to generate the ICS string
             ->header('Content-Type', 'text/calendar; charset=utf-8')
             ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
 
-        
+
         // $response = $this->sunsetApiCall('38.907192', '-77.036873', 'UTC', '1990-05-22');
 
         // return view('index', [
