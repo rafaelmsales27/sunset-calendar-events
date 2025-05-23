@@ -66,42 +66,43 @@ class IndexController extends Controller
                 'test' => json_encode($sunData),
             ]);
         }
-        $events = [];
-        foreach ($sunData as $day) {
-            //     - search for sunset
-            $eventTime = $day['results']['sunset']; //HH:MM:SS AM/PM
-            $eventDate = $day['results']['date']; //Y-m-d
-            $apiTimezone = $day['results']['timezone'];
-            $combinedDateTimeString = $eventDate . ' ' . $eventTime;
-            // Parse into a Carbon instance, explicitly setting the timezone from the API
-            $eventStartTime = Carbon::parse($combinedDateTimeString, $apiTimezone);
-            // Clone the start time and add 30 minutes for the end time
-            $eventEndTime = $eventStartTime->copy()->addMinutes(30);
-            // $eventEndTime = + 30 min ?
-            //     - create event in .ics for that day
-            $events[] = Event::create()
-                        ->name('Sunset at timezone ' . $apiTimezone)
-                        // ->uniqueIdentifier('A unique identifier can be set here')
-                        ->createdAt(Carbon::now())
-                        ->startsAt($eventStartTime)
-                        ->endsAt($eventEndTime)
-                        // ->transparent()
-                        // ->alertMinutesBefore(30, 'Sunset will start in 30 minutes')
-                        ->coordinates($latitude, $longitude);
-        }
+        // $events = [];
+        // foreach ($sunData as $day) {
+        //     //     - search for sunset
+        //     $eventTime = $day['results']['sunset']; //HH:MM:SS AM/PM
+        //     $eventDate = $day['results']['date']; //Y-m-d
+        //     $apiTimezone = $day['results']['timezone'];
+        //     $combinedDateTimeString = $eventDate . ' ' . $eventTime;
+        //     // Parse into a Carbon instance, explicitly setting the timezone from the API
+        //     $eventStartTime = Carbon::parse($combinedDateTimeString, $apiTimezone);
+        //     // Clone the start time and add 30 minutes for the end time
+        //     $eventEndTime = $eventStartTime->copy()->addMinutes(30);
+        //     // $eventEndTime = + 30 min ?
+        //     //     - create event in .ics for that day
+        //     $events[] = Event::create()
+        //                 ->name('Sunset at timezone ' . $apiTimezone)
+        //                 // ->uniqueIdentifier('A unique identifier can be set here')
+        //                 ->createdAt(Carbon::now())
+        //                 ->startsAt($eventStartTime)
+        //                 ->endsAt($eventEndTime)
+        //                 // ->transparent()
+        //                 // ->alertMinutesBefore(30, 'Sunset will start in 30 minutes')
+        //                 ->coordinates($latitude, $longitude);
+        // }
 
-        if (empty($events)) {
-            return redirect()->route('index')->with('error', 'No calendar events could be generated, even after retrieving sunset data. Please check logs.');
-        }
+        // if (empty($events)) {
+        //     return redirect()->route('index')->with('error', 'No calendar events could be generated, even after retrieving sunset data. Please check logs.');
+        // }
 
-
-
-        $calendar = Calendar::create()
-        ->name('Laracon Online')
-        ->description('Auto-generated sunset events for your chosen location.')
-        ->event($events);
+        // $calendar = Calendar::create()
+        // ->name('Laracon Online')
+        // ->description('Auto-generated sunset events for your chosen location.')
+        // ->event($events);
 
         $fileName = 'sunset_events_' . $start->format('Ymd') . '_' . $end->format('Ymd') . '.ics';
+
+        //! Do test event and then import into multiple calendars
+
 
         return response($calendar->get()) // Call ->get() to generate the ICS string
             ->header('Content-Type', 'text/calendar; charset=utf-8')
