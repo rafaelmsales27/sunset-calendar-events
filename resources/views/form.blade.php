@@ -29,6 +29,7 @@
                     <div class="mb-5">
                         <select name="country" id="country"
                             class="form-select w-full p-2.5 rounded border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option selected value="">Choose a country</option>
                             @foreach ($countries as $code => $name)
                                 <option value="{{ $code }}">{{ $name }}</option>
                             @endforeach
