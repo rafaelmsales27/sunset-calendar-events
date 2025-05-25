@@ -11,6 +11,9 @@ use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
 use Spatie\IcalendarGenerator\Enums\EventStatus;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Intl\Countries;
+
 
 class IndexController extends Controller
 {
@@ -71,7 +74,7 @@ class IndexController extends Controller
                 'test' => json_encode($sunData),
             ]);
         }
-        
+
         // $events = [];
         // foreach ($sunData as $day) {
         //     //     - search for sunset
@@ -162,5 +165,42 @@ class IndexController extends Controller
         curl_close($curl);
 
         return $response;
+    }
+
+    public function showForm()
+    {
+        // Load the list of country codes from JSON
+        $countryCodes = Storage::json('geonames/countries.json');
+
+        // Map country codes to names
+        $countries = collect($countryCodes)->mapWithKeys(function ($code) {
+            try {
+                return [$code => Countries::getName($code)];
+            } catch (\Exception $e) {
+                return [$code => $code]; // fallback
+            }
+        })->sort();
+
+        return view('form', compact('countries'));
+    }
+
+    public function submitForm(Request $request)
+    {
+        $selectedCountry = $request->input('country');
+
+        // Load countries again (so view has them after POST)
+        $countryCodes = Storage::json('geonames/countries.json');
+        
+        $countries = collect($countryCodes)->mapWithKeys(function ($code) {
+            try {
+                return [$code => Countries::getName($code)];
+            } catch (\Exception $e) {
+                return [$code => $code];
+            }
+        })->sort();
+
+        $test = "You selected: " . ($countries[$selectedCountry] ?? $selectedCountry);
+
+        return view('form', compact('countries', 'test'));
     }
 }

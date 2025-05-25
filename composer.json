@@ -9,7 +9,8 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "spatie/icalendar-generator": "^3.0"
+        "spatie/icalendar-generator": "^3.0",
+        "symfony/intl": "^7.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
