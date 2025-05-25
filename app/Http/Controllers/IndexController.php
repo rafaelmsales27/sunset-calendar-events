@@ -71,6 +71,7 @@ class IndexController extends Controller
                 'test' => json_encode($sunData),
             ]);
         }
+        
         // $events = [];
         // foreach ($sunData as $day) {
         //     //     - search for sunset
